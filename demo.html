@@ -22,10 +22,29 @@
         function onConnect() {
             // Once a connection has been made, make a subscription and send a message.
             console.log("onConnect");
+
+            message = new Paho.MQTT.Message("Ahoj");
+            message.destinationName = "/row/15/text";
+            client.send(message);
+
+            client.onMessageArrived = onMessageArrived;
+            client.subscribe("bridge/temperature");
+
+            client.onMessageArrived = onMessageArrived;
         }
 
+        function onMessageArrived(message) {
 
+            console.log("onMessageArrived:" + message.destinationName);
+            console.log("onMessageArrived:" + message.payloadString);
+            document.getElementById("temperature").innerText = message.payloadString;
+        }
+        
+    
     </script>
+    
+    <h1>Teplota °C</h1>
+    <p id="temperature"></p> 
 
 </body>
 </html>
